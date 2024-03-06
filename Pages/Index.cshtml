@@ -1,0 +1,23 @@
+﻿@page
+@using MYChamp.Models;
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<div class="text-center mt-5">
+    <h1 class="display-4">Welcome</h1>
+    <h5>to</h5>
+    @await Component.InvokeAsync("TitleText")
+    <div class="container col-5 m-auto mt-4">
+        <div class="row">
+            @foreach (VisitUsInformationModel visitUsModel in Model.VisitUs)
+            {
+                <div class="col-2 text-end">
+                    <a href=" @visitUsModel.Link" title="@visitUsModel.Name">
+                        <img class="w-25" src="data:image/@visitUsModel.ImageType;base64,@visitUsModel.Icon" alt="@visitUsModel.Link" />
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
