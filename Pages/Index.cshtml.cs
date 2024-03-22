@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MYChamp.DbContexts;
@@ -5,6 +6,7 @@ using MYChamp.Models;
 
 namespace MYChamp.Pages
 {
+   // [Authorize]
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;

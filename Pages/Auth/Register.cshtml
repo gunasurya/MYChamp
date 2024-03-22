@@ -1,0 +1,59 @@
+﻿@page
+@model MYChamp.Pages.Auth.RegisterModel
+@using MYChamp.AuthModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<link rel="stylesheet" href="~/css/Auth_css/register.css" />
+<div class="container mt-5 bordered">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-6">
+            <div class="text-danger" asp-validation-summary="All"></div>
+            <form method="post" class="border p-4 border-gray border-2 rounded-1">
+                <div class="mb-3">
+                    <label asp-for="_register.Name" class="form-label"><h6>Name</h6></label>
+                    <input type="text" asp-for="_register.Name" class="form-control" />
+                    <span asp-validation-for="_register.Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="_register.Email" class="form-label"><h6>Email</h6></label>
+                    <input type="email" asp-for="_register.Email" class="form-control" />
+                    <span asp-validation-for="_register.Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="_register.Password" class="form-label"><h6>Password</h6></label>
+                    <input type="password" asp-for="_register.Password" class="form-control" />
+                    <span asp-validation-for="_register.Password" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="_register.ConfirmPassword" class="form-label"><h6>Confirm Password</h6></label>
+                    <input type="password" asp-for="_register.ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="_register.ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="_register.Address" class="form-label"><h6>Address</h6></label>
+                    <input type="text" asp-for="_register.Address" class="form-control" />
+                    <span asp-validation-for="_register.Address" class="text-danger"></span>
+                </div>
+                <div class="row mb-3 py-4">
+                    <div class="col-6 text-center">
+                        <span class="text-primary">Already have Account</span><a asp-page="/Auth/Login" class="btn"><span class="text-dark">Login</span></a>
+                       
+                    </div>
+                    <div class="col-6 text-center">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </div>
+                    
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
