@@ -5,9 +5,11 @@ using MYChamp.Models;
 using MYChamp.DbContexts;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MYChamp.Pages.Auth
 {
+    
     [BindProperties]
     public class RegisterModel : PageModel
     {
@@ -25,12 +27,19 @@ namespace MYChamp.Pages.Auth
         }
 
         protected readonly Register_Model _register_model;
+   
 
-       
-
-        public IActionResult OnGet()
+    public IActionResult OnGet()
         {
-            return Page();
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("/Index");
+            }
+            else
+            {
+                return Page();
+            }
+            
         }
 
         [HttpPost]
@@ -45,7 +54,8 @@ namespace MYChamp.Pages.Auth
                     UserName = _register.Email,
                     Email = _register.Email,
                     address = _register.Address,
-                    name= _register.Name,
+                    name=_register.FirstName+_register
+                    .MiddleName+_register.LastName,
 
                 };
 

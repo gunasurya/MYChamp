@@ -56,6 +56,22 @@ namespace MYChamp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "forcefulLogouts",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserName = table.Column<string>(type: "text", nullable: false),
+                    ipAddress = table.Column<string>(type: "text", nullable: false),
+                    logoutTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    forceful_logout_by = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_forcefulLogouts", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "VisitUsInformation",
                 columns: table => new
                 {
@@ -178,6 +194,32 @@ namespace MYChamp.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Session_Models",
+                columns: table => new
+                {
+                    SessionId = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    UserName = table.Column<string>(type: "text", nullable: false),
+                    IPAddress = table.Column<string>(type: "text", nullable: false),
+                    LoginTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    status = table.Column<int>(type: "integer", nullable: false),
+                    forcefully_logout = table.Column<bool>(type: "boolean", nullable: false),
+                    forcefully_logout_by = table.Column<string>(type: "text", nullable: false),
+                    logoutType = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Session_Models", x => x.SessionId);
+                    table.ForeignKey(
+                        name: "FK_Session_Models_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "VisitUsInformation",
                 columns: new[] { "Id", "Active", "Icon", "ImageType", "Link", "Name" },
@@ -223,6 +265,11 @@ namespace MYChamp.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Session_Models_UserId",
+                table: "Session_Models",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -242,6 +289,12 @@ namespace MYChamp.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "forcefulLogouts");
+
+            migrationBuilder.DropTable(
+                name: "Session_Models");
 
             migrationBuilder.DropTable(
                 name: "VisitUsInformation");

@@ -22,6 +22,78 @@ namespace MYChamp.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("MYChamp.AuthModel.ForcefulLogout", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("forceful_logout_by")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ipAddress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("logoutTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("id");
+
+                    b.ToTable("forcefulLogouts");
+                });
+
+            modelBuilder.Entity("MYChamp.AuthModel.Session_model", b =>
+                {
+                    b.Property<string>("SessionId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("IPAddress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LoginTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("forcefully_logout")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("forcefully_logout_by")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("logoutType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("SessionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Session_Models");
+                });
+
             modelBuilder.Entity("MYChamp.Models.AppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -272,6 +344,17 @@ namespace MYChamp.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("MYChamp.AuthModel.Session_model", b =>
+                {
+                    b.HasOne("MYChamp.Models.AppUser", "AspNetUsers")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AspNetUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

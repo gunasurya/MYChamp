@@ -7,17 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="migration\**" />
+    <Compile Remove="NewFolder\**" />
     <Compile Remove="Pages\Auth\Auth_css\**" />
     <Compile Remove="Pages\NewFolder\**" />
+    <Content Remove="migration\**" />
+    <Content Remove="NewFolder\**" />
     <Content Remove="Pages\Auth\Auth_css\**" />
     <Content Remove="Pages\NewFolder\**" />
+    <EmbeddedResource Remove="migration\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
     <EmbeddedResource Remove="Pages\Auth\Auth_css\**" />
     <EmbeddedResource Remove="Pages\NewFolder\**" />
+    <None Remove="migration\**" />
+    <None Remove="NewFolder\**" />
     <None Remove="Pages\Auth\Auth_css\**" />
     <None Remove="Pages\NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controller\ISessionHandlerService.cs" />
+    <Compile Remove="Migrations\20240320095435_one.cs" />
+    <Compile Remove="Migrations\20240320095435_one.Designer.cs" />
+    <Compile Remove="Migrations\20240326101114_updated_fields.cs" />
+    <Compile Remove="Migrations\20240326101114_updated_fields.Designer.cs" />
     <Compile Remove="Pages\Login.cshtml.cs" />
   </ItemGroup>
 
@@ -43,6 +56,9 @@
     </PackageReference>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,6 +66,10 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using MYChamp.AuthModel;
 using MYChamp.Models;
 
 namespace MYChamp.DbContexts
@@ -7,7 +8,8 @@ namespace MYChamp.DbContexts
     public class MYChampDbContext : IdentityDbContext<AppUser>
     {
         public DbSet<VisitUsInformationModel> VisitUsInformation { get; set; }
-
+        public DbSet<Session_model> Session_Models { get; set; }
+        public DbSet<ForcefulLogout> forcefulLogouts { get; set; }
         public MYChampDbContext(DbContextOptions<MYChampDbContext> options) : base(options)
         {
         }
@@ -37,7 +39,11 @@ namespace MYChamp.DbContexts
                 }
             );
 
-            
+            modelBuilder.Entity<Session_model>()
+        .HasOne(s => s.AspNetUsers) 
+        .WithMany()             
+        .HasForeignKey(s => s.UserId);
+
         }
     }
 }

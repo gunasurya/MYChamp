@@ -5,9 +5,15 @@
 @{
     ViewData["Title"] = "Login";
 }
+
 <link rel="stylesheet" href="~/css/Auth_css/Login.css">
 
+<!-- Bootstrap CSS -->
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
 
+<!-- jQuery and Bootstrap JS -->
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
 <div class="container mt-5">
     <div class="row justify-content-center align-items-center">
@@ -34,18 +40,47 @@
                         <button type="submit" class="btn btn-primary" id="login_submit">Submit</button>
                     </div>
                     <div class="col-6 text-center">
-                      <span class="text-info">Do not have account</span><a asp-page="/Auth/Register" class="btn" id="register_btn">Register Here</a>
-                    </div> 
-                   
-                   
+                        <span class="text-info">Do not have an account?</span><a asp-page="/Auth/Register" class="btn" id="register_btn">Register Here</a>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+@if (Convert.ToBoolean(HttpContext.Session.GetString("popUpShow")))
+{
+    <div id="modalWrapper">
+        <button type="button" class="btn btn-primary" id="popupbutton" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="display:none;"></button>
+        <!-- Modal -->
+        <div class="modal fade modal-dialog-centered" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5 text-warning" id="staticBackdropLabel">Warning</h1>
+                        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-center fw-bold lead">Another Session is running. Do you want to cancel the running session?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <a asp-page="/Auth/Forceful_logout" id="modalYes" class="btn btn-primary" role="button">Yes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @section Scripts {
-    @{
-        <partial name="_ValidationScriptsPartial" />
-    }
+    <script>
+        $(document).ready(function () {
+            var popUpShow = '@HttpContext.Session.GetString("popUpShow")';
+            if (popUpShow === "true") {
+                $("#popupbutton").click();
+            }
+        });
+    </script>
+    <partial name="_ValidationScriptsPartial" />
 }
