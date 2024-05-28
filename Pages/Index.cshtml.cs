@@ -21,9 +21,12 @@ namespace MYChamp.Pages
             _sessionHandlerController = _shc;
         }
         public List<VisitUsInformationModel> VisitUs {  get; set; }
+
+
         public void OnGet()
         {
             VisitUs = _db.VisitUsInformation.ToList();
+            
             
         }
     }

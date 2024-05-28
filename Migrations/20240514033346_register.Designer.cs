@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MYChamp.Migrations
 {
     [DbContext(typeof(MYChampDbContext))]
-    [Migration("20240419070956_one")]
-    partial class one
+    [Migration("20240514033346_register")]
+    partial class register
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,54 @@ namespace MYChamp.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("MYChamp.AuthModel.ConsulteeRegister", b =>
+                {
+                    b.Property<int>("consulteeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("consulteeId"));
+
+                    b.Property<DateTime>("BillingDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UnitOfCurrency")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("consulteeEmail")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("consulteeName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("costPerHour")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("consulteeId");
+
+                    b.ToTable("Consultees");
+                });
+
+            modelBuilder.Entity("MYChamp.AuthModel.Currency", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("currency_type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("currency");
+                });
 
             modelBuilder.Entity("MYChamp.AuthModel.ForcefulLogout", b =>
                 {
@@ -53,10 +101,79 @@ namespace MYChamp.Migrations
                     b.ToTable("forcefulLogouts");
                 });
 
+            modelBuilder.Entity("MYChamp.AuthModel.Register_Model", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("EmailId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("emailid");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("firstname");
+
+                    b.Property<bool>("IsEmployee")
+                        .HasColumnType("boolean")
+                        .HasColumnName("isemployee");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("lastname");
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("middlename");
+
+                    b.Property<int>("Otp")
+                        .HasColumnType("integer")
+                        .HasColumnName("otp");
+
+                    b.Property<DateTime>("OtpValiditity")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("otpvalidity");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("password");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("phonenumber");
+
+                    b.Property<bool>("active")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("confirmpassword")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("passwordvalidity")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("signinaccounts");
+                });
+
             modelBuilder.Entity("MYChamp.AuthModel.Session_model", b =>
                 {
-                    b.Property<string>("SessionId")
-                        .HasColumnType("text");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("IPAddress")
                         .IsRequired()
@@ -68,7 +185,10 @@ namespace MYChamp.Migrations
                     b.Property<DateTime>("LoginTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("UserId")
+                    b.Property<DateTime>("LogoutTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("SessionId")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -90,11 +210,9 @@ namespace MYChamp.Migrations
                     b.Property<int>("status")
                         .HasColumnType("integer");
 
-                    b.HasKey("SessionId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Session_Models");
+                    b.ToTable("sessionlog");
                 });
 
             modelBuilder.Entity("MYChamp.Models.AppUser", b =>
@@ -347,17 +465,6 @@ namespace MYChamp.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("MYChamp.AuthModel.Session_model", b =>
-                {
-                    b.HasOne("MYChamp.Models.AppUser", "AspNetUsers")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AspNetUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

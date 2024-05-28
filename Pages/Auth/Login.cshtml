@@ -7,6 +7,7 @@
 }
 
 <link rel="stylesheet" href="~/css/Auth_css/Login.css">
+<link rel="stylesheet" href="~/css/site.css">
 
 <!-- Bootstrap CSS -->
 <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -14,39 +15,55 @@
 <!-- jQuery and Bootstrap JS -->
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
 <div class="container mt-5">
     <div class="row justify-content-center align-items-center">
-        <div class="col-md-6">
+        <div class="col-md-8">
+            <!-- Validation Summary -->
             <div class="text-danger" asp-validation-summary="All"></div>
+
+            <!-- Display individual model errors -->
+            @foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <div class="text-danger">@modelError.ErrorMessage</div>
+            }
+
+            <!-- Form -->
             <form method="post" class="border p-4 border-gray border-2 rounded-1">
-                <div class="mb-3">
+                <!-- Username -->
+                <div class="mb-3 form-floating">
+                    <input type="text" asp-for="login_Model.Name" class="form-control" placeholder="Username" />
                     <label asp-for="login_Model.Name" class="form-label"><h6>Username</h6></label>
-                    <input type="text" asp-for="login_Model.Name" class="form-control" />
                     <span asp-validation-for="login_Model.Name" class="text-danger"></span>
                 </div>
-                <div class="mb-3">
+
+                <!-- Password -->
+                <div class="mb-3 form-floating">
+                    <input type="password" asp-for="login_Model.Password" class="form-control" placeholder="Password" />
                     <label asp-for="login_Model.Password" class="form-label"><h6>Password</h6></label>
-                    <input type="password" asp-for="login_Model.Password" class="form-control" />
                     <span asp-validation-for="login_Model.Password" class="text-danger"></span>
                 </div>
+
+                <!-- Remember Me -->
                 <div class="mb-3">
-                    <input type="checkbox" asp-for="login_Model.RememberMe" class="form-check-input mt-2 mx -0" />
+                    <input type="checkbox" asp-for="login_Model.RememberMe" class="form-check-input mt-2 mx-0" />
                     <label asp-for="login_Model.RememberMe" class="form-check-label">Remember me</label>
                 </div>
 
+                <!-- Submit Button -->
                 <div class="mb-3 text-center py-4 row">
                     <div class="col-6 text-center">
                         <button type="submit" class="btn btn-primary" id="login_submit">Submit</button>
                     </div>
                     <div class="col-6 text-center">
-                        <span class="text-info">Do not have an account?</span><a asp-page="/Auth/Register" class="btn" id="register_btn">Register Here</a>
+                        <span class="text-info">Do not have an account?</span>
+                        <a asp-page="/Auth/Register" class="btn" id="register_btn">Register Here</a>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 
 @if (Convert.ToBoolean(HttpContext.Session.GetString("popUpShow")))
 {
@@ -76,6 +93,7 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+            
             var popUpShow = '@HttpContext.Session.GetString("popUpShow")';
             if (popUpShow === "true") {
                 $("#popupbutton").click();
@@ -84,3 +102,4 @@
     </script>
     <partial name="_ValidationScriptsPartial" />
 }
+ 

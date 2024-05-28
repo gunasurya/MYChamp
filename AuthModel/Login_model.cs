@@ -24,15 +24,19 @@ namespace MYChamp.AuthModel
         public static List<MyChampIdentity> MyChampIdentities; 
         static MyChampIdentityList() { MyChampIdentities = new List<MyChampIdentity>();
         }
-        public static MyChampIdentity GetUserIdentity(string loginId) { 
-            return MyChampIdentities.FirstOrDefault(t => t.LoginId == loginId); 
+        public static MyChampIdentity GetUserIdentity(string loginId) {
+            Console.WriteLine("champ data");
+            Console.WriteLine(MyChampIdentities);
+            return MyChampIdentities.FirstOrDefault(t => t.LoginId.ToString()==loginId); 
         }  
     }
 
     public class MyChampIdentity {
         public string SessionId { get; set; }
         public string SeqNo { get; set; } 
-        public string LoginId { get; set; }
+        public int LoginId { get; set; }
+        public bool popupshow {  get; set; }
+        public string username {  get; set; }
         public string IpAddress { get; set; }
         public DateTime LastAccTime { get; set; } 
 

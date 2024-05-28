@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity; 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -43,11 +43,17 @@ namespace MYChamp.Pages.Auth
 
         public async Task<IActionResult> OnPostAsync()
         {
+            foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+             Console.Write(modelError.ErrorMessage);
+                
+            }
+            
             if (ModelState.IsValid) // Validate login form data
             {
                 ActionResult<int> loginResult = await loginController.OnPostAsync(login_Model);
                 int resultValue = loginResult.Value;
-                if (resultValue == 1 || resultValue==3 || resultValue==4)
+                if (resultValue == 1 || resultValue == 3 || resultValue == 4)
                 {
                     return Page();
                 }
@@ -55,11 +61,13 @@ namespace MYChamp.Pages.Auth
                 {
                     return RedirectToPage("/Index");
                 }
-                
             }
-
-                
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            }
             return Page();
         }
+
     }
 }

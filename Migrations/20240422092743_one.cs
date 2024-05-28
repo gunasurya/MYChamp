@@ -195,9 +195,11 @@ namespace MYChamp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Session_Models",
+                name: "Session_Model",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     SessionId = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: false),
                     UserName = table.Column<string>(type: "text", nullable: false),
@@ -211,9 +213,9 @@ namespace MYChamp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Session_Models", x => x.SessionId);
+                    table.PrimaryKey("PK_Session_Model", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Session_Models_AspNetUsers_UserId",
+                        name: "FK_Session_Model_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -267,8 +269,8 @@ namespace MYChamp.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Session_Models_UserId",
-                table: "Session_Models",
+                name: "IX_Session_Model_UserId",
+                table: "Session_Model",
                 column: "UserId");
         }
 
@@ -294,7 +296,7 @@ namespace MYChamp.Migrations
                 name: "forcefulLogouts");
 
             migrationBuilder.DropTable(
-                name: "Session_Models");
+                name: "Session_Model");
 
             migrationBuilder.DropTable(
                 name: "VisitUsInformation");

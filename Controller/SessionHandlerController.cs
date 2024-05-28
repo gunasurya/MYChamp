@@ -21,15 +21,15 @@ namespace MYChamp.Controller
             _db = db;
             _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
+            Console.WriteLine("checking whether it will print in console");
         }
 
         public bool SessionExists(string userId)
         {
-            var result = _db.Session_Models.FirstOrDefault(s => s.UserId == userId && s.IsActive);
+            var result = _db.sessionlog.FirstOrDefault(s =>s.UserName == userId && s.IsActive);
             if (result != null)
             {
-               
-                
+                  
                 return true;
             }
             else
@@ -44,7 +44,7 @@ namespace MYChamp.Controller
             var session = new Session_model
             {
                 SessionId = sessionId,
-                UserId=userid,
+               
 
                 forcefully_logout_by = string.Empty,
                 UserName = username,
@@ -57,27 +57,29 @@ namespace MYChamp.Controller
           //  _httpContextAccessor.HttpContext.Session.SetString("uniqeid", session.uniqueId);
             
             
-            _db.Session_Models.Add(session);
+            _db.sessionlog.Add(session);
             _db.SaveChanges();
         }
 
-        public void UpdateSessionInformation(string sessionId, string userName)
+        public void UpdateSessionInformation( string userName)
         {
-            var session = _db.Session_Models.FirstOrDefault(x => x.UserId == userName);
+            var session = _db.sessionlog.FirstOrDefault(x => x.UserName == userName && x.IsActive);
+            Console.Write("session info " + session);
             if (session != null)
             {
                 session.IsActive = false;
                 session.status = 0;
                 session.logoutType = "normal";
+                session.LogoutTime= DateTime.UtcNow;
 
-                _db.Session_Models.Update(session);
+                _db.sessionlog.Update(session);
                 _db.SaveChanges();
             }
         }
 
         public bool check(string uniqueId)
         {
-            var obj = _db.Session_Models.FirstOrDefault(x => x.UserId == uniqueId && x.forcefully_logout);
+            var obj = _db.sessionlog.FirstOrDefault(x => x.UserName == uniqueId && x.forcefully_logout);
             if (obj != null)
             {
                 return true;
@@ -89,18 +91,19 @@ namespace MYChamp.Controller
 
         }
 
-        public void UpdateForceLogout(string username, string uniqueId)
+        public void UpdateForceLogout(string username)
         {
-            var session = _db.Session_Models.FirstOrDefault(x => x.UserId == username && x.IsActive);
+            var session = _db.sessionlog.FirstOrDefault(x => x.UserName  == username && x.IsActive);
             if (session != null)
             {
                 session.forcefully_logout = true;
-                session.forcefully_logout_by = uniqueId;
+                session.forcefully_logout_by = username;
                 session.IsActive = false;
                 session.status = 0;
                 session.logoutType = "abnormal";
+                session.LogoutTime = DateTime.UtcNow;
 
-                _db.Session_Models.Update(session);
+                _db.sessionlog.Update(session);
                 _db.SaveChanges();
             }
         }
@@ -118,7 +121,7 @@ namespace MYChamp.Controller
             }
             
           
-            var obj= _db.Session_Models.FirstOrDefault(u=>u.UserId==uniqueId&& u.forcefully_logout);
+            var obj= _db.sessionlog.FirstOrDefault(u=>u.UserName==uniqueId&& u.forcefully_logout);
             if(obj != null)
             {
                 return true;

@@ -26,13 +26,17 @@ namespace MYChamp.Pages.Auth
             var sessionId = HttpContext.Session.Id;
             var ipAddress = Request.HttpContext.Connection.RemoteIpAddress?.ToString();
             var username = HttpContext.Session.GetString("username");
-            _sessionHandlerController.UpdateForceLogout(username, username+ipAddress);
+            _sessionHandlerController.UpdateForceLogout(username);
             var password= HttpContext.Session.GetString("password");
             var result = await _signInManager.PasswordSignInAsync(username, password, true, false);
+            string loginId = HttpContext.Session.GetString("loginId");
+
+           
+
             if (result.Succeeded)
             {
                 var loginTime = DateTime.UtcNow;
-                _sessionHandlerController.AddSessionInformation(sessionId,username, ipAddress, loginTime);
+                _sessionHandlerController.AddSessionInformation(sessionId,username, ipAddress, loginTime,"loginId");
                 bool value= _sessionHandlerController.check(HttpContext.Session.GetString("uniqueid"));
                 Console.WriteLine("some value " + HttpContext.Session.GetString("uniqueid"));
                Console.WriteLine(value+" boolean value");

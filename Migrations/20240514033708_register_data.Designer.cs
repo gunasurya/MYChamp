@@ -3,6 +3,7 @@ using System;
 using MYChamp.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MYChamp.Migrations
 {
     [DbContext(typeof(MYChampDbContext))]
-    partial class MYChampDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240514033708_register_data")]
+    partial class register_data
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,79 +25,31 @@ namespace MYChamp.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("MYChamp.AuthModel.ConsulteeLog", b =>
-                {
-                    b.Property<int>("LogId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("logid");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LogId"));
-
-                    b.Property<int>("ConsulteeId")
-                        .HasColumnType("integer")
-                        .HasColumnName("consulteeid");
-
-                    b.Property<double>("Cost")
-                        .HasColumnType("double precision")
-                        .HasColumnName("cost");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("date");
-
-                    b.Property<double>("Duration")
-                        .HasColumnType("double precision")
-                        .HasColumnName("duration");
-
-                    b.Property<DateTime>("FromDateTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("fromdatetime");
-
-                    b.Property<DateTime>("ToDateTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("todatetime");
-
-                    b.HasKey("LogId");
-
-                    b.HasIndex("ConsulteeId");
-
-                    b.ToTable("ConsultyLogs");
-                });
-
             modelBuilder.Entity("MYChamp.AuthModel.ConsulteeRegister", b =>
                 {
                     b.Property<int>("consulteeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("consulteeid");
+                        .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("consulteeId"));
 
-                    b.Property<DateTime?>("BillingDate")
-                        .IsRequired()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("billingdate");
+                    b.Property<DateTime>("BillingDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UnitOfCurrency")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("unitofcurrency");
+                        .HasColumnType("text");
 
                     b.Property<string>("consulteeEmail")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("consulteeemail");
+                        .HasColumnType("text");
 
                     b.Property<string>("consulteeName")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("consulteename");
+                        .HasColumnType("text");
 
-                    b.Property<double?>("costPerHour")
-                        .IsRequired()
-                        .HasColumnType("double precision")
-                        .HasColumnName("costperhour");
+                    b.Property<double>("costPerHour")
+                        .HasColumnType("double precision");
 
                     b.HasKey("consulteeId");
 
@@ -510,17 +465,6 @@ namespace MYChamp.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("MYChamp.AuthModel.ConsulteeLog", b =>
-                {
-                    b.HasOne("MYChamp.AuthModel.ConsulteeRegister", "Consultee")
-                        .WithMany()
-                        .HasForeignKey("ConsulteeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Consultee");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

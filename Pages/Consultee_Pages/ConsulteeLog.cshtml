@@ -1,0 +1,114 @@
+﻿@page
+@model MYChamp.Pages.Consultee_Pages.ConsulteeLogModel
+@{
+    ViewData["Title"] = "Create Consultee Log";
+}
+
+<div class="container mt-5 mb-2">
+    <div class="row justify-content-center align-items-end">
+        <div class="col-md-9 text-end">
+            <a asp-page="/Consultee_Pages/Consultee_Register" class="btn btn-danger">Register New Consultee</a>
+        </div>
+    </div>
+</div>
+
+<div class="container bordered">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-9">
+            <form method="post" class="border p-4 border-gray border-2 rounded-1">
+                <div class="mb-3 form-floating">
+                    <select asp-for="ConsulteeLog.ConsulteeId" class="form-select @(ViewData.ModelState["ConsulteeLog.ConsulteeId"]?.Errors.Count > 0 ? "is-invalid" : "")" id="consulteeId" onchange="updateCost()">
+                        <option value="">Select a Consultee</option>
+                        @foreach (var consultee in Model.Consultees)
+                        {
+                            <option value="@consultee.consulteeId" data-cost-per-hour="@consultee.costPerHour">@consultee.consulteeName</option>
+                        }
+                    </select>
+                    <label asp-for="ConsulteeLog.ConsulteeId" class="form-label"><h6>Consultee</h6></label>
+                    <div class="invalid-feedback">
+                        @Html.ValidationMessageFor(model => model.ConsulteeLog.ConsulteeId)
+                    </div>
+                </div><br />
+
+                <div class="row">
+                    <div class="mb-3 form-floating col-6">
+                        <input type="datetime-local" asp-for="ConsulteeLog.FromDateTime" class="form-control @(ViewData.ModelState["ConsulteeLog.FromDateTime"]?.Errors.Count > 0 ? "is-invalid" : "")" id="fromDateTime" placeholder="From DateTime" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" onchange="updateDurationAndCost()" />
+                        <label asp-for="ConsulteeLog.FromDateTime" class="form-label"><h6>From DateTime</h6></label>
+                        <div class="invalid-feedback">
+                            @Html.ValidationMessageFor(model => model.ConsulteeLog.FromDateTime)
+                        </div>
+                    </div>
+                    <div class="mb-3 form-floating col-6">
+                        <input type="datetime-local" asp-for="ConsulteeLog.ToDateTime" class="form-control @(ViewData.ModelState["ConsulteeLog.ToDateTime"]?.Errors.Count > 0 ? "is-invalid" : "")" id="toDateTime" onchange="updateDurationAndCost()" placeholder="To DateTime" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                        <label asp-for="ConsulteeLog.ToDateTime" class="form-label"><h6>To DateTime</h6></label>
+                        <div class="invalid-feedback">
+                            @Html.ValidationMessageFor(model => model.ConsulteeLog.ToDateTime)
+                        </div>
+                    </div>
+                </div><br />
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="mb-3 form-floating">
+                            <input type="number" asp-for="ConsulteeLog.Duration" class="form-control @(ViewData.ModelState["ConsulteeLog.Duration"]?.Errors.Count > 0 ? "is-invalid" : "")" id="duration" placeholder="Duration" onchange="onDurationChange()" />
+                            <label asp-for="ConsulteeLog.Duration" class="form-label"><h6>Duration (minutes)</h6></label>
+                            <div class="invalid-feedback">
+                                @Html.ValidationMessageFor(model => model.ConsulteeLog.Duration)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3 form-floating">
+                            <input type="number" asp-for="ConsulteeLog.Cost" class="form-control @(ViewData.ModelState["ConsulteeLog.Cost"]?.Errors.Count > 0 ? "is-invalid" : "")" id="cost" placeholder="Cost" readonly />
+                            <label asp-for="ConsulteeLog.Cost" class="form-label"><h6>Cost</h6></label>
+                            <div class="invalid-feedback">
+                                @Html.ValidationMessageFor(model => model.ConsulteeLog.Cost)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3 py-4">
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-primary form-control">Create Log</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function onDurationChange() {
+            var fromDateTime = new Date(document.getElementById('fromDateTime').value);
+            var duration = parseInt(document.getElementById('duration').value);
+            var toDateTime = new Date(fromDateTime.getTime() + duration * 60000);
+            document.getElementById('toDateTime').value = toDateTime.toISOString().slice(0, 16);
+            updateCost();
+        }
+
+        function updateDurationAndCost() {
+            var fromDateTime = new Date(document.getElementById('fromDateTime').value);
+            var toDateTime = new Date(document.getElementById('toDateTime').value);
+            var duration = (toDateTime - fromDateTime) / 60000;
+
+            if (duration > 0) {
+                document.getElementById('duration').value = duration;
+                updateCost();
+            } else {
+                document.getElementById('duration').value = 0;
+                document.getElementById('cost').value = 0;
+            }
+        }
+
+        function updateCost() {
+            var duration = parseInt(document.getElementById('duration').value);
+            var consulteeId = document.getElementById('consulteeId');
+            var selectedOption = consulteeId.options[consulteeId.selectedIndex];
+            var costPerHour = selectedOption.getAttribute('data-cost-per-hour');
+            var cost = (duration / 60) * costPerHour;
+            document.getElementById('cost').value = cost.toFixed(2);
+        }
+    </script>
+}

@@ -31,6 +31,10 @@
     <Compile Remove="Migrations\20240320095435_one.Designer.cs" />
     <Compile Remove="Migrations\20240326101114_updated_fields.cs" />
     <Compile Remove="Migrations\20240326101114_updated_fields.Designer.cs" />
+    <Compile Remove="Migrations\20240421053001_newone.cs" />
+    <Compile Remove="Migrations\20240421053001_newone.Designer.cs" />
+    <Compile Remove="Migrations\20240430091930_updatedone.cs" />
+    <Compile Remove="Migrations\20240430091930_updatedone.Designer.cs" />
     <Compile Remove="Pages\Login.cshtml.cs" />
   </ItemGroup>
 
@@ -44,6 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityframeworkCore.Design" Version="8.0.3">
@@ -54,8 +59,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="MimeKit" Version="4.6.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
+    <PackageReference Include="SendGrid" Version="9.29.3" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />

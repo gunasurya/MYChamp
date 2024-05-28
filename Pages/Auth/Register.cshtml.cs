@@ -6,75 +6,101 @@ using MYChamp.DbContexts;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace MYChamp.Pages.Auth
 {
-    
     [BindProperties]
+
     public class RegisterModel : PageModel
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly MYChampDbContext _dbContext;
-        public Register_Model _register {  get; set; }
+        private readonly MYChampDbContext _db;
+        public Register_Model _register { get; set; }
 
         public RegisterModel(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, MYChampDbContext dbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _dbContext = dbContext;
+            _db = dbContext;
             _register = new Register_Model();
         }
 
-        protected readonly Register_Model _register_model;
-   
-
-    public IActionResult OnGet()
+        public IActionResult OnGet()
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("/Index");
+                return RedirectToPage("/Index");
             }
             else
             {
                 return Page();
             }
-            
+
         }
 
-        [HttpPost]
+        
         public async Task<IActionResult> OnPostAsync()
         {
-
             if (ModelState.IsValid)
             {
-
-                var user = new AppUser
+                
+                var user = _db.signinaccounts.FirstOrDefault(u => u.EmailId == _register.EmailId);
+                if(user != null)
                 {
-                    UserName = _register.Email,
-                    Email = _register.Email,
-                    address = _register.Address,
-                    name=_register.FirstName+_register
-                    .MiddleName+_register.LastName,
+                    ModelState.AddModelError(string.Empty, "Username Already Exists");
+                    return Page();
+                }
 
+                var newUser = new AppUser
+                {
+                    name=_register.FirstName,
+                    UserName = _register.EmailId,
+                    Email = _register.EmailId,
+                    address=string.Empty,
+                   
                 };
 
-                var result = await _userManager.CreateAsync(user, _register.Password);
-
+                var result = await _userManager.CreateAsync(newUser, _register.Password);
                 if (result.Succeeded)
                 {
+                   
+                    Random random = new Random();
+                    var registerDetails = new Register_Model
+                    {
+                        Id = random.Next(),
+                        FirstName = _register.FirstName,
+                        MiddleName = _register.MiddleName,
+                        LastName = _register.LastName,
+                        EmailId = _register.EmailId,
+                        PhoneNumber = _register.PhoneNumber,
+                        Password = _register.Password,
+                        confirmpassword = _register.confirmpassword
+                    };
+
+                    _db.signinaccounts.Add(registerDetails);
+                    await _db.SaveChangesAsync();
+
+                  
+
                     
-                  //  await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToPage("/Auth/Login");
                 }
-                
-                foreach (var error in result.Errors)
+                else
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
+ 
+
+
+             
+
             }
-
-
 
             return Page();
         }

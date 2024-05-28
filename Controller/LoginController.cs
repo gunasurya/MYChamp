@@ -38,28 +38,33 @@ namespace MYChamp.Controller
         [HttpPost]
         public async Task<ActionResult<int>> OnPostAsync(Login_model login_Model)
         {
-            var sequenceId = _httpContextAccessor.HttpContext.Session.GetString("sequence"); // Access session value
+            var sequenceId = _httpContextAccessor.HttpContext.Session.GetString("sequence");  // Access session value
             _httpContextAccessor.HttpContext.Session.SetString("sequence", Guid.NewGuid().ToString()); // Set session value
 
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByNameAsync(login_Model.Name);
+
+                var user = _db.signinaccounts.FirstOrDefault(u=>u.EmailId == login_Model.Name
+                 );
                 
-                if (user != null && await _userManager.CheckPasswordAsync(user, login_Model.Password))
+                if (user != null &&  (user.Password==login_Model.Password))
                 {
-                   MyChampIdentity myChampIdentity = new MyChampIdentity();
-                   myChampIdentity.LoginId=user.Id;
-                  
+                    /* storing the login information in static class */
+                    var myChampIdentity = new MyChampIdentity();
 
-
-
-                    var existingSession = _sessionHandlerController.SessionExists(login_Model.Name);
+                    myChampIdentity.username = user.EmailId;
+                    myChampIdentity.LoginId=user.Id ;
+                    _httpContextAccessor.HttpContext.Session.SetString("loginId", user.Id.ToString()
+                        );
+                    var existingSession = _sessionHandlerController.SessionExists(user.EmailId.ToString());
                     Console.WriteLine(existingSession + "  " + login_Model.Name);
-
+                     
                     if (existingSession)
                     {
+                        myChampIdentity.popupshow = true;
+                        myChampIdentity.IsSessionTaken = true;
                         _httpContextAccessor.HttpContext.Session.SetString("popUpShow", "true");
-                        _httpContextAccessor.HttpContext.Session.SetString("username", user.UserName);
+                        _httpContextAccessor.HttpContext.Session.SetString("username", user.EmailId);
                         _httpContextAccessor.HttpContext.Session.SetString("password", login_Model.Password);
                         return 1;
                     }
@@ -69,16 +74,17 @@ namespace MYChamp.Controller
                         if (result.Succeeded)
                         {
                             var sessionId = _httpContextAccessor.HttpContext.Session.Id;
+                            myChampIdentity.SessionId = sessionId;
                             Console.WriteLine("session id ", sessionId);
                             var username = login_Model.Name;
                             var ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress?.ToString();
-
-
+                            myChampIdentity.IpAddress = ipAddress;
+                            
                             var loginTime = DateTime.UtcNow;
-                            _sessionHandlerController.AddSessionInformation(sessionId, username, ipAddress, loginTime,user.Id);
-                            return 2; // Return appropriate response
+                            _sessionHandlerController.AddSessionInformation(sessionId, username, ipAddress, loginTime,user.Id.ToString()) ;
+                            return 2; 
                         }
-                        else
+                        else 
                         {
                             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                             return 3;
@@ -90,6 +96,13 @@ namespace MYChamp.Controller
                     ModelState.AddModelError(string.Empty, "Invalid username or password.");
                 }
             }
+
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine($"Model error: {error.ErrorMessage}");
+            }
+
+
             return 4;
         }
     }

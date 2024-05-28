@@ -24,9 +24,9 @@ namespace MYChamp.Pages.Auth
         public async Task<IActionResult> OnGetAsync()
         {
             var sessionId = HttpContext.Session.Id;
-            var user = User.Identity.Name;
-
-            sessionHandlerController.UpdateSessionInformation(sessionId,user);
+            var username = User.Identity.Name;
+            Console.WriteLine("username" + username);
+            sessionHandlerController.UpdateSessionInformation(username);
             await _signInManager.SignOutAsync();
             HttpContext.Session.Clear();    
             return RedirectToPage("/Index");

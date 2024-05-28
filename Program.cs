@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSingleton<EmailSenderService>();
 builder.Services.AddDbContext<MYChampDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("TrooperCruitPostgreSQL")));
 
 builder.Services.AddControllersWithViews();
@@ -37,6 +38,7 @@ builder.Services.AddHttpContextAccessor(); // Register HttpContextAccessor here
 
 builder.Services.AddScoped<LoginController>();
 builder.Services.AddScoped<SessionHandlerController>();
+builder.Services.AddScoped<SendEmail>();
 //builder.Services.AddHostedService<ForcefulLogoutBackgroundService>();
 
 builder.Services.AddHttpClient();
@@ -74,5 +76,5 @@ app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
+     
 app.Run();
