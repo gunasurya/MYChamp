@@ -85,8 +85,8 @@
     --bs-border-radius-xl: 1rem;
     --bs-border-radius-2xl: 2rem;
     --bs-border-radius-pill: 50rem;
-    --bs-link-color: #2937f0;
-    --bs-link-hover-color: #212cc0;
+    --bs-link-color: #f02983;
+    --bs-link-hover-color: #fffff;
     --bs-code-color: #d63384;
     --bs-highlight-bg: #fff3cd;
     --BackgroundColor1ToRight: linear-gradient(90deg, rgba(204,8,65,0.6) 3%, rgba(8,0,255,0.6) 100%);
@@ -123,10 +123,12 @@ body {
     background-color: #000;
     justify-content: center;
 }
+
 .custom-tooltip {
     --bs-tooltip-bg: var(--bd-violet-bg);
     --bs-tooltip-color: var(--bs-white);
 }
+
 #spc.bod {
     background: #fff;
     height: 100%;
@@ -152,9 +154,11 @@ body {
 .bg-transform-2 {
     background: var(--BackgroundColor3ToRight);
 }
+
 .btn-shadow-transform {
     animation: rotateBorder 5s infinite alternate;
 }
+
 @keyframes rotateBorder {
     0% {
         box-shadow: 0 0.5rem 1rem rgba(255,0,0, 0.5); /* Red border */
@@ -172,6 +176,7 @@ body {
         box-shadow: 0 0.5rem 1rem rgba(255,0,0, 0.5); /* Back to red border */
     }
 }
+
 .grad-text {
     background: linear-gradient(90deg, rgba(204,8,65,1) 3%, rgba(8,0,255,1) 100%);
     -webkit-background-clip: text;
@@ -3162,6 +3167,16 @@ textarea.form-control-lg {
     list-style: none;
 }
 
+.nav-link-menu {
+    display: block;
+    padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+    font-size: var(--bs-nav-link-font-size);
+    font-weight: var(--bs-nav-link-font-weight);
+    color: var(--bs-link-hover-color);
+    text-decoration: none;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
 .nav-link {
     display: block;
     padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
@@ -3481,8 +3496,8 @@ textarea.form-control-lg {
 }
 
 .bg-CCard {
-    background: var(--BackgroundColor5ToRight);/*linear-gradient(to bottom, #003366 0%, #336699 100%);*/
-    /*background-color: *#3333cc;*/ 
+    background: var(--BackgroundColor5ToRight); /*linear-gradient(to bottom, #003366 0%, #336699 100%);*/
+    /*background-color: *#3333cc;*/
     height: 24rem;
     border-radius: 0 0.375rem 0.375rem 0;
     box-shadow: 1px 0 10px -1px #000000;
@@ -3498,6 +3513,7 @@ textarea.form-control-lg {
 .bg-payThrough-Option {
     background: var(--BackgroundColor4ToRight) !important;
 }
+
 .bg-payThrough-SelOption {
     background: var(--BackgroundColor5ToRight) !important;
     box-shadow: -5px 0 10px 2px #3366cc;
@@ -3570,17 +3586,21 @@ textarea.form-control-lg {
 .card-border-1 {
     border-radius: var(--bs-card-border-radius1);
 }
+
 .payment-card {
     height: 20rem;
 }
+
 .payment-card-table {
     position: absolute;
     width: 25rem;
     height: 20rem;
 }
+
 .payment-card-form {
     height: 18rem !important;
 }
+
 .title-left-border {
     border-radius: 0 var(--bs-card-border-radius1) var(--bs-card-border-radius1) 0;
 }
@@ -3597,6 +3617,11 @@ textarea.form-control-lg {
 
 .card-title {
     margin-bottom: var(--bs-card-title-spacer-y);
+    color: black;
+}
+
+.card-text {
+    color: black;
 }
 
 .card-subtitle {
@@ -6781,6 +6806,7 @@ textarea.form-control-lg {
     --bs-text-opacity: 1;
     color: rgba(var(--bs-white-rgb), var(--bs-text-opacity)) !important;
 }
+
     .text-white::placeholder {
         --bs-text-opacity: 0.7;
         color: rgba(var(--bs-white-rgb), var(--bs-text-opacity)) !important;
@@ -7066,6 +7092,106 @@ section {
             color: #2937f0;
         }
 
+.modal-confirm {
+    color: #434e65;
+    width: 525px;
+}
+
+    .modal-confirm .modal-content {
+        padding: 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: none;
+    }
+
+    .modal-confirm .modal-header {
+        background: #47c9a2;
+        border-bottom: none;
+        position: relative;
+        text-align: center;
+        margin: -20px -20px 0;
+        border-radius: 5px 5px 0 0;
+        padding: 35px;
+    }
+
+    .modal-confirm h4 {
+        text-align: center;
+        font-size: 36px;
+        margin: 10px 0;
+    }
+
+    .modal-confirm .form-control, .modal-confirm .btn {
+        min-height: 40px;
+        border-radius: 3px;
+    }
+
+    .modal-confirm .close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: #fff;
+        text-shadow: none;
+        opacity: 0.5;
+    }
+
+        .modal-confirm .close:hover {
+            opacity: 0.8;
+        }
+
+    .modal-confirm .icon-box {
+        color: #fff;
+        width: 95px;
+        height: 95px;
+        display: inline-block;
+        border-radius: 50%;
+        z-index: 9;
+        border: 5px solid #fff;
+        padding: 15px;
+        text-align: center;
+    }
+
+        .modal-confirm .icon-box i {
+            font-size: 64px;
+            margin: -4px 0 0 -4px;
+        }
+
+    .modal-confirm.modal-dialog {
+        margin-top: 80px;
+    }
+
+    .modal-confirm .btn, .modal-confirm .btn:active {
+        color: #fff;
+        border-radius: 4px;
+        background: #eeb711 !important;
+        text-decoration: none;
+        transition: all 0.4s;
+        line-height: normal;
+        border-radius: 30px;
+        margin-top: 10px;
+        padding: 6px 20px;
+        border: none;
+    }
+
+        .modal-confirm .btn:hover, .modal-confirm .btn:focus {
+            background: #eda645 !important;
+            outline: none;
+        }
+
+        .modal-confirm .btn span {
+            margin: 1px 3px 0;
+            float: left;
+        }
+
+        .modal-confirm .btn i {
+            margin-left: 1px;
+            font-size: 20px;
+            float: right;
+        }
+
+.trigger-btn {
+    display: inline-block;
+    margin: 100px auto;
+}
 /*!
  * html5-device-mockups (https://github.com/pixelsign/html5-device-mockups)
  * Copyright 2013 - 2017 pixelsign

@@ -1,0 +1,66 @@
+﻿@page
+@model MYChamp.Pages.TakeTest.IndexModel
+@{
+    Layout = "_Layout";
+}
+<section class="pt-5 pb-5 shadow-sm">
+    <div class="container">
+        <div class="row pt-5">
+            <div class="col-12">
+                <h1>Personality Test</h1>
+                <div class="row">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger" id="validation-summary"></div>
+                        @for (int i = 0; i < Model.TestAttemptModel.QuestionsList.Count && i < 20; i++)
+                        {
+                            var question = Model.TestAttemptModel.QuestionsList[i];
+
+                            <div class="mb-3">
+                                <h4>@question.Question</h4>
+                                <input type="hidden" asp-for="TestAttemptModel.QuestionsList[i].Id" />
+                                <input type="hidden" asp-for="TestAttemptModel.QuestionsList[i].Options" />
+                                <input type="hidden" asp-for="TestAttemptModel.QuestionsList[i].Question" />
+                                <select asp-for="TestAttemptModel.QuestionsList[i].SelectedOption" class="form-select @(ViewData.ModelState[$"TestAttemptModel.QuestionsList[{i}].SelectedOption"]?.Errors.Count > 0 ? "is-invalid" : "")">
+                                    <option value="">Select an option</option>
+                                    @for (int j = 0; j < question.Options.Count; j++)
+                                    {
+                                        <option value="@j">@question.Options[j]</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="TestAttemptModel.QuestionsList[i].SelectedOption" class="text-danger"></span>
+                            </div>
+                        }
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+
+                        <input type="hidden" asp-for="TestAttemptModel.TestId" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.querySelector("form").addEventListener("submit", function (event) {
+            let valid = true;
+            const selectElements = document.querySelectorAll("select");
+
+            selectElements.forEach(function (select) {
+                if (!select.value) {
+                    valid = false;
+                    select.classList.add("is-invalid");
+                } else {
+                    select.classList.remove("is-invalid");
+                }
+            });
+
+            if (!valid) {
+                event.preventDefault();
+                document.getElementById("validation-summary").innerText = "Please select an option for all questions.";
+            }
+        });
+    </script>
+}

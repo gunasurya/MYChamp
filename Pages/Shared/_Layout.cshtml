@@ -24,6 +24,32 @@
             <div class="collapse navbar-collapse justify-content-md-end me-3" id="solutionLayoutNavItems">
                 <ul class="navbar-nav mr-auto">
                     @{
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a id="logout" class="nav-link text-danger fw-bold " asp-page="Auth/Logout" role="button"><h4>Logout</h4></a>
+
+                            </li>
+
+                        }
+
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Auth/Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Auth/Register">Sign Up</a>
+                            </li>
+                        }
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            // Sample data for demonstration
+                            ViewData["NavItems"] = new List<string> { "Personality Test○Add Test•Take Test•", };
+                            ViewData["NavLinks"] = new List<string> { "CardRegistration•TakeTest/TakeTestPage•" };
+                        }
+
+
                         List<string> navItems = (List<string>)ViewData["NavItems"],
                         navLinks = (List<string>)ViewData["NavLinks"];
                         if (navItems != null)
@@ -65,9 +91,8 @@
             </div>
         </div>
     </nav>
-    <header class="masthead">
+    <header class="masthead" style="padding-top:10px">
         <div data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="0" tabindex="0">
-            <div style="height:3.5em;"></div>
             @RenderBody()
             <div class="modal fade" id="CommoniFrameModel" tabindex="-1" role="dialog" aria-labelledby="CommoniFrameModelLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-scrollable">
