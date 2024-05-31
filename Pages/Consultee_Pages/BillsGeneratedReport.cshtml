@@ -10,7 +10,7 @@
         @TempData["response"]
     </div>
 }
-
+<br />
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -38,6 +38,9 @@
         </div>
     </div>
 </div>
+
+
+
 
 @if (Model.BillsGeneratedReport != null && Model.BillsGeneratedReport.Count > 0)
 {
@@ -111,7 +114,7 @@ else
 {
     <div class="text-center m-3">No records found</div>
 }
-
+<br /></br></br>
 @section Scripts {
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@2.4.0/dist/email.min.js">
     </script>
