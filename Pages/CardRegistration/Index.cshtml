@@ -5,97 +5,80 @@
 }
 
 <!-- Button trigger modal -->
-    <section class="pt-5 pb-5 shadow-sm">
-        <div class="container">
-            <div class="row pt-5">
-                <div class="col-12">
-                    <h3 class="text-uppercase  mb-4">Personality Test</h3>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                        Add New Personality Test
-                    </button>
-                </div>
+<section class="pt-5 pb-5 shadow-sm " style="background-color: ButtonHighlight">
+    <div class="container">
+        <div class="row pt-5">
+            <div class="col-12">
+                <h3 class="text-uppercase mb-4">Personality Test</h3>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    Add New Personality Test
+                </button>
             </div>
         </div>
-        <div class="container">
-            <div class="row pt-5">
-                @for (int i = 0; i < Model.TestList.Count(); i++)
-                {
-
-
+    </div>
+    <div class="container">
+        <div class="row pt-5">
+            @for (int i = 0; i < Model.TestList.Count(); i++)
+            {
                 string base64Image = @Model.TestList[i].imagebase64;
                 string dataURI = $"data:image/png;base64,{base64Image}";
- 
-                    <div class="col-lg-4 mb-3 d-flex align-items-stretch">
-                        <div class="card">
-                        <img src="data:image/svg;base64,@Model.TestList[i].imagebase64" alt="imagename" />
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">@Model.TestList[i].name</h5>
-                                <p class="card-text mb-2">@Model.TestList[i].description</p>
-                                <p class="card-text mb-4">
-                                    <i class="fas fa-clock"></i> Timer: @Model.TestList[i].timer seconds <!-- Clock icon added -->
-                                </p>
-
-                         
-                                <input type="hidden" id="testid" value="@Model.TestList[i].testid" /> 
-                            </div>
+                <div class="col-lg-4 mb-3 d-flex align-items-stretch">
+                    <div class="card">
+                        <img src="@dataURI" alt="imagename" />
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@Model.TestList[i].name</h5>
+                            <p class="card-text mb-2">@Model.TestList[i].description</p>
+                            <p class="card-text mb-4">
+                                <i class="fas fa-clock"></i> Timer: @Model.TestList[i].timer seconds <!-- Clock icon added -->
+                            </p>
+                            <input type="hidden" id="testid" value="@Model.TestList[i].testid" />
                         </div>
                     </div>
-                }
-
-
-            </div>
-        </div>
-    </section>
-    <div class="container">
-
-        <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Test</h1>
-
-                    </div>
-                    <form method="post" enctype="multipart/form-data">
-                        <div class="modal-body">
-                            <div class="col-sm-12">
-                                <div class="row">
-                                    <div class="form-floating col-sm-6">
-                                        <input asp-for="testRegistrationModel.name" type="text" class="form-control" id="TestName" placeholder="Enter the Test Name">
-                                        <label for="floatingInput">Test Name</label>
-                                        <span asp-validation-for="testRegistrationModel.name" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-floating col-sm-6">
-                                        <input asp-for="testRegistrationModel.timer" type="number" min="1" max="150" class="form-control" id="Timer" placeholder="Enter the Time in Minutes">
-                                        <label for="floatingPassword">Number of Minutes</label>
-                                        <span asp-validation-for="testRegistrationModel.timer" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-floating col-sm-6">
-                                        <textarea asp-for="testRegistrationModel.description" class="form-control" placeholder="Enter the Description"></textarea>
-                                        <label for="floatingDescription">Description</label>
-                                        <span asp-validation-for="testRegistrationModel.description" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label for="Image">Upload Image</label>
-                                    <input asp-for="testRegistrationModel.ImageFile" type="file" class="form-control-file" accept="image/*" />
-                                    <span asp-validation-for="testRegistrationModel.ImageFile" class="text-danger"></span>
-                                </div>
-                                @*  <div class="col-4">
-                            <img src=@(Model.CardModel.ImageFile==null?null:Model.CardModel.ImageFile) />
-                            </div> *@
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </div>
-                        </div>
-                    </form>
-
                 </div>
+            }
+        </div>
+    </div>
+</section>
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Test</h1>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="form-floating col-sm-6">
+                                    <input asp-for="testRegistrationModel.name" type="text" class="form-control" id="TestName" placeholder="Enter the Test Name">
+                                    <label for="floatingInput">Test Name</label>
+                                    <span asp-validation-for="testRegistrationModel.name" class="text-danger"></span>
+                                </div>
+                                <div class="form-floating col-sm-6">
+                                    <input asp-for="testRegistrationModel.timer" type="number" min="1" max="150" class="form-control" id="Timer" placeholder="Enter the Time in Minutes">
+                                    <label for="floatingPassword">Number of Minutes</label>
+                                    <span asp-validation-for="testRegistrationModel.timer" class="text-danger"></span>
+                                </div>
+                                <div class="form-floating col-sm-6">
+                                    <textarea asp-for="testRegistrationModel.description" class="form-control" placeholder="Enter the Description"></textarea>
+                                    <label for="floatingDescription">Description</label>
+                                    <span asp-validation-for="testRegistrationModel.description" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="Image">Upload Image</label>
+                                <input asp-for="testRegistrationModel.ImageFile" type="file" class="form-control-file" accept="image/*" />
+                                <span asp-validation-for="testRegistrationModel.ImageFile" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-
     </div>
-  
- 
- 
+</div>

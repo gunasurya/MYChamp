@@ -9,7 +9,9 @@ namespace MYChamp.Models
         public int TestId { get; set; }
         public int UserId { get; set; }
         public List<QuestionModel> QuestionsList { get; set; }
+        public QuestionModel CurrentQuestion { get; set; }
     }
+}
 
     public class QuestionModel
     {
@@ -33,4 +35,4 @@ namespace MYChamp.Models
 
 
 
-}
+

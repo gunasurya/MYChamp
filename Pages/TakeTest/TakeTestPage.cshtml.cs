@@ -26,8 +26,10 @@ namespace MYChamp.Pages.TakeTest
 
         public async Task<IActionResult> OnGet()
         {
+            Console.WriteLine("taketest");
             TestList = await _dbContext.testregistration.ToListAsync();
             return Page();
+
         }
     }
 }
