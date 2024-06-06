@@ -38,7 +38,6 @@
                             </div>
                         }
 
-
                         <div class="navigation-buttons">
                             <button type="button" id="prevBtn" class="btn btn-secondary" style="display:none;">Previous</button>
                             <button type="button" id="nextBtn" class="btn btn-secondary">Next</button>
@@ -78,10 +77,18 @@
             }
         }
 
+        function isOptionSelected(index) {
+            return $("input[name='TestAttemptModel.QuestionsList[" + index + "].SelectedOption']:checked").length > 0;
+        }
+
         $("#nextBtn").click(function () {
-            if (currentQuestionIndex < totalQuestions - 1) {
-                currentQuestionIndex++;
-                showQuestion(currentQuestionIndex);
+            if (isOptionSelected(currentQuestionIndex)) {
+                if (currentQuestionIndex < totalQuestions - 1) {
+                    currentQuestionIndex++;
+                    showQuestion(currentQuestionIndex);
+                }
+            } else {
+                alert("Please select an option before moving to the next question.");
             }
         });
 
