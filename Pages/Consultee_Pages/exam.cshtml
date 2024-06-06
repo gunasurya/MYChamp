@@ -1,0 +1,43 @@
+﻿@page
+@model MYChamp.Pages.Consultee_Pages.examModel
+
+<h1 id="displayValue">@Model.Value</h1>
+<button id="incrementBtn">Increment</button>
+<button id="decrementBtn">Decrement</button>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#incrementBtn').click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Page("/Consultee_Pages/exam", "Increment")',
+                    success: function (response) {
+                        // Update the displayed value
+                        $('#displayValue').text(response.value);
+                    },
+                    error: function (err) {
+                        alert('Error occurred while incrementing value: ' + err.responseText);
+                        console.log(err);
+                    }
+                });
+            });
+
+            $('#decrementBtn').click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Page("/Consultee_Pages/exam", "Decrement")',
+                    success: function (response) {
+                        // Update the displayed value
+                        $('#displayValue').text(response.value);
+                    },
+                    error: function (err) {
+                        alert('Error occurred while decrementing value: ' + err.responseText);
+                        console.log(err);
+                    }
+                });
+            });
+        });
+    </script>
+}

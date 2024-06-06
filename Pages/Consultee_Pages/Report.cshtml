@@ -9,8 +9,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
-        background-color:floralwhite;
-        
+        background-color: floralwhite;
     }
 
         .chart-container div {
@@ -19,35 +18,37 @@
             min-width: 300px;
         }
 
-    canvas {
+    .chart {
         width: 100% !important;
         height: auto !important;
     }
 
 </style>
 <h2 class="text-center m-4">@ViewData["Title"]</h2>
-<br /><br />
+<br />
+<br />
 
 <div class="chart-container">
     <div>
         <h3>Total Duration and Cost Over Time</h3>
-        <canvas id="totalDurationCostChart" width="400" height="200"></canvas>
+        <div id="totalDurationCostChart" class="chart"></div>
     </div>
     <div>
         <h3>User-Specific Duration and Cost</h3>
-        <canvas id="userDurationCostChart" width="400" height="200"></canvas>
+        <div id="userDurationCostChart" class="chart"></div>
     </div>
     <div>
         <h3>Daily Usage Summary</h3>
-        <canvas id="dailyUsageChart" width="400" height="200"></canvas>
+        <div id="dailyUsageChart" class="chart"></div>
     </div>
     <div>
         <h3>Insightful Information</h3>
-        <canvas id="insightfulChart" width="400" height="200"></canvas>
+        <div id="insightfulChart" class="chart"></div>
     </div>
 </div>
 
 @section Scripts {
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script>
         async function fetchChartData(url) {
             const response = await fetch(url);
@@ -57,129 +58,79 @@
         async function renderCharts() {
             // Chart 1: Total Duration and Cost Over Time
             const totalDurationCostData = await fetchChartData('/Consultee_Pages/Report?handler=TotalDurationCostData');
-            const ctx1 = document.getElementById('totalDurationCostChart').getContext('2d');
-            new Chart(ctx1, {
-                type: 'line',
-                data: {
-                    labels: totalDurationCostData.map(entry => new Date(entry.date).toLocaleDateString()),
-                    datasets: [
-                        {
-                            label: 'Total Duration (hours)',
-                            data: totalDurationCostData.map(entry => entry.totalDuration),
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderWidth: 1
-                        },
-                        {
-                            label: 'Total Cost ($)',
-                            data: totalDurationCostData.map(entry => entry.totalCost),
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderWidth: 1
-                        }
-                    ]
+            const totalDurationCostDates = totalDurationCostData.map(entry => new Date(entry.date).toLocaleDateString());
+            const totalDurations = totalDurationCostData.map(entry => entry.totalDuration);
+            const totalCosts = totalDurationCostData.map(entry => entry.totalCost);
+
+            Plotly.newPlot('totalDurationCostChart', [
+                {
+                    x: totalDurationCostDates,
+                    y: totalDurations,
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: 'Total Duration (hours)',
+                    line: { color: 'blue' }
                 },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
+                {
+                    x: totalDurationCostDates,
+                    y: totalCosts,
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: 'Total Cost ($)',
+                    line: { color: 'red' }
                 }
-            });
+            ]);
 
             // Chart 2: User-Specific Duration and Cost
             const userDurationCostData = await fetchChartData('/Consultee_Pages/Report?handler=UserDurationCostData');
-            const ctx2 = document.getElementById('userDurationCostChart').getContext('2d');
-            new Chart(ctx2, {
-                type: 'bar',
-                data: {
-                    labels: userDurationCostData.map(entry => `User ${entry.consulteeId}`),
-                    datasets: [
-                        {
-                            label: 'Total Duration (hours)',
-                            data: userDurationCostData.map(entry => entry.totalDuration),
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        },
-                        {
-                            label: 'Total Cost ($)',
-                            data: userDurationCostData.map(entry => entry.totalCost),
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            borderWidth: 1
-                        }
-                    ]
+            const userIds = userDurationCostData.map(entry => `User ${entry.consulteeId}`);
+            const userDurations = userDurationCostData.map(entry => entry.totalDuration);
+            const userCosts = userDurationCostData.map(entry => entry.totalCost);
+
+            Plotly.newPlot('userDurationCostChart', [
+                {
+                    x: userIds,
+                    y: userDurations,
+                    type: 'bar',
+                    name: 'Total Duration (hours)',
+                    marker: { color: 'blue' }
                 },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
+                {
+                    x: userIds,
+                    y: userCosts,
+                    type: 'bar',
+                    name: 'Total Cost ($)',
+                    marker: { color: 'red' }
                 }
-            });
+            ]);
 
             // Chart 3: Daily Usage Summary
             const dailyUsageData = await fetchChartData('/Consultee_Pages/Report?handler=DailyUsageData');
-            const ctx3 = document.getElementById('dailyUsageChart').getContext('2d');
-            new Chart(ctx3, {
-                type: 'bar',
-                data: {
-                    labels: dailyUsageData.map(entry => new Date(entry.date).toLocaleDateString()),
-                    datasets: [
-                        {
-                            label: 'Total Users',
-                            data: dailyUsageData.map(entry => entry.totalUsers),
-                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                            borderColor: 'rgba(153, 102, 255, 1)',
-                            borderWidth: 1
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
+            const dailyUsageDates = dailyUsageData.map(entry => new Date(entry.date).toLocaleDateString());
+            const dailyUsers = dailyUsageData.map(entry => entry.totalUsers);
+
+            Plotly.newPlot('dailyUsageChart', [
+                {
+                    x: dailyUsageDates,
+                    y: dailyUsers,
+                    type: 'bar',
+                    name: 'Total Users',
+                    marker: { color: 'purple' }
                 }
-            });
+            ]);
 
             // Chart 4: Additional Insightful Information
             const insightfulData = await fetchChartData('/Consultee_Pages/Report?handler=InsightfulData');
-            const ctx4 = document.getElementById('insightfulChart').getContext('2d');
-            new Chart(ctx4, {
-                type: 'pie',
-                data: {
-                    labels: insightfulData.map(entry => entry.label),
-                    datasets: [
-                        {
-                            data: insightfulData.map(entry => entry.value),
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)'
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)'
-                            ],
-                            borderWidth: 1
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true
+            const insightfulLabels = insightfulData.map(entry => entry.label);
+            const insightfulValues = insightfulData.map(entry => entry.value);
+
+            Plotly.newPlot('insightfulChart', [
+                {
+                    labels: insightfulLabels,
+                    values: insightfulValues,
+                    type: 'pie'
                 }
-            });
+            ]);
         }
 
         document.addEventListener('DOMContentLoaded', renderCharts);

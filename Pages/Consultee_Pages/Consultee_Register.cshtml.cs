@@ -31,7 +31,7 @@ namespace MYChamp.Pages.Consultee_Pages
 
         public IActionResult OnPost()
         {
-            var result=_db.consultees.FirstOrDefault(u=>u.consulteeName == _register.consulteeName && u.consulteeEmail==_register.consulteeEmail);
+            var result = _db.consultees.FirstOrDefault(u => u.consulteeName == _register.consulteeName && u.consulteeEmail == _register.consulteeEmail);
             if (result != null)
             {
                 ModelState.AddModelError(string.Empty, "Username already present");
@@ -60,6 +60,7 @@ namespace MYChamp.Pages.Consultee_Pages
                 {
                     _db.consultees.Add(consultee_info);
                     _db.SaveChanges();
+                    TempData["success"] = "yes";  // Set TempData["success"]
                     return RedirectToPage("/");
                 }
                 catch (Exception ex)
@@ -72,9 +73,7 @@ namespace MYChamp.Pages.Consultee_Pages
                 ModelState.AddModelError(string.Empty, "Some error occurred. Please check your input and try again.");
             }
 
-            // Re-fetch the Currencies list to repopulate the dropdown in case of an error
             Currencies = _db.currency.ToList();
-
             return Page();
         }
     }
