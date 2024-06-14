@@ -5,134 +5,193 @@
 }
 
 <style>
-    .chart-container {
+    .outer-container {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        background-color: floralwhite;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px;
     }
 
-        .chart-container div {
-            flex: 1 1 45%;
-            margin: 10px;
-            min-width: 300px;
-        }
+    .inner-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 10px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
 
     .chart {
-        width: 100% !important;
-        height: auto !important;
+        width: 100%;
+        height: 400px;
     }
-
 </style>
-<h2 class="text-center m-4">@ViewData["Title"]</h2>
-<br />
-<br />
 
-<div class="chart-container">
-    <div>
-        <h3>Total Duration and Cost Over Time</h3>
-        <div id="totalDurationCostChart" class="chart"></div>
+<h2 class="text-center m-4">@ViewData["Title"]</h2>
+
+<div class="outer-container">
+    <div class="inner-container">
+        <div class="form-group">
+            <label for="userSelect">Select User:</label>
+            <select id="userSelect" class="form-control"></select>
+        </div>
+        <div class="form-group">
+            <label for="yearSelect">Select Year:</label>
+            <select id="yearSelect" class="form-control"></select>
+        </div>
+        <div>
+            <h3>Monthly Duration and Cost</h3>
+            <div id="monthlyDurationCostChart" class="chart"></div>
+        </div>
     </div>
-    <div>
-        <h3>User-Specific Duration and Cost</h3>
-        <div id="userDurationCostChart" class="chart"></div>
-    </div>
-    <div>
-        <h3>Daily Usage Summary</h3>
-        <div id="dailyUsageChart" class="chart"></div>
-    </div>
-    <div>
-        <h3>Insightful Information</h3>
-        <div id="insightfulChart" class="chart"></div>
+    <br />
+    <div class="inner-container">
+        <div class="form-group">
+            <label for="userSelect2">Select User:</label>
+            <select id="userSelect2" class="form-control"></select>
+        </div>
+        <div class="form-group">
+            <label for="yearSelect2">Select Year:</label>
+            <select id="yearSelect2" class="form-control"></select>
+        </div>
+        <div>
+            <h3>Monthly Bill Payment Status</h3>
+            <div id="monthlyBillStatusChart" class="chart"></div>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script>
+        const allMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        function ensureAllMonths(data, valueFields) {
+            const dataMap = new Map(data.map(entry => [entry.month, entry]));
+
+            return allMonths.map(month => {
+                if (dataMap.has(month)) {
+                    return dataMap.get(month);
+                } else {
+                    const emptyEntry = { month };
+                    valueFields.forEach(field => emptyEntry[field] = 0);
+                    return emptyEntry;
+                }
+            });
+        }
+
         async function fetchChartData(url) {
             const response = await fetch(url);
             return await response.json();
         }
 
         async function renderCharts() {
-            // Chart 1: Total Duration and Cost Over Time
-            const totalDurationCostData = await fetchChartData('/Consultee_Pages/Report?handler=TotalDurationCostData');
-            const totalDurationCostDates = totalDurationCostData.map(entry => new Date(entry.date).toLocaleDateString());
-            const totalDurations = totalDurationCostData.map(entry => entry.totalDuration);
-            const totalCosts = totalDurationCostData.map(entry => entry.totalCost);
+            const userId = document.getElementById('userSelect').value;
+            const year = document.getElementById('yearSelect').value;
+            await fetchAndRenderMonthlyData(userId, year);
 
-            Plotly.newPlot('totalDurationCostChart', [
+            const userId2 = document.getElementById('userSelect2').value;
+            const year2 = document.getElementById('yearSelect2').value;
+            await fetchAndRenderMonthlyData(userId2, year2);
+        }
+
+        async function fetchAndRenderMonthlyData(userId, year) {
+            let monthlyDurationCostData = await fetchChartData(`/Consultee_Pages/Report?handler=MonthlyDurationCostData&userId=${userId}&year=${year}`);
+            monthlyDurationCostData = ensureAllMonths(monthlyDurationCostData, ['totalDuration', 'totalCost']);
+            const months = monthlyDurationCostData.map(entry => entry.month);
+            const totalDurations = monthlyDurationCostData.map(entry => entry.totalDuration);
+            const totalCosts = monthlyDurationCostData.map(entry => entry.totalCost);
+
+            Plotly.newPlot('monthlyDurationCostChart', [
                 {
-                    x: totalDurationCostDates,
+                    x: months,
                     y: totalDurations,
-                    type: 'scatter',
-                    mode: 'lines+markers',
-                    name: 'Total Duration (hours)',
-                    line: { color: 'blue' }
-                },
-                {
-                    x: totalDurationCostDates,
-                    y: totalCosts,
-                    type: 'scatter',
-                    mode: 'lines+markers',
-                    name: 'Total Cost ($)',
-                    line: { color: 'red' }
-                }
-            ]);
-
-            // Chart 2: User-Specific Duration and Cost
-            const userDurationCostData = await fetchChartData('/Consultee_Pages/Report?handler=UserDurationCostData');
-            const userIds = userDurationCostData.map(entry => `User ${entry.consulteeId}`);
-            const userDurations = userDurationCostData.map(entry => entry.totalDuration);
-            const userCosts = userDurationCostData.map(entry => entry.totalCost);
-
-            Plotly.newPlot('userDurationCostChart', [
-                {
-                    x: userIds,
-                    y: userDurations,
                     type: 'bar',
                     name: 'Total Duration (hours)',
                     marker: { color: 'blue' }
                 },
                 {
-                    x: userIds,
-                    y: userCosts,
+                    x: months,
+                    y: totalCosts,
                     type: 'bar',
                     name: 'Total Cost ($)',
                     marker: { color: 'red' }
                 }
             ]);
 
-            // Chart 3: Daily Usage Summary
-            const dailyUsageData = await fetchChartData('/Consultee_Pages/Report?handler=DailyUsageData');
-            const dailyUsageDates = dailyUsageData.map(entry => new Date(entry.date).toLocaleDateString());
-            const dailyUsers = dailyUsageData.map(entry => entry.totalUsers);
+            let monthlyBillStatusData = await fetchChartData(`/Consultee_Pages/Report?handler=MonthlyBillStatusData&userId=${userId}&year=${year}`);
+            monthlyBillStatusData = ensureAllMonths(monthlyBillStatusData, ['paidAmount', 'unpaidAmount']);
+            const billMonths = monthlyBillStatusData.map(entry => entry.month);
+            const paidAmounts = monthlyBillStatusData.map(entry => entry.paidAmount);
+            const unpaidAmounts = monthlyBillStatusData.map(entry => entry.unpaidAmount);
 
-            Plotly.newPlot('dailyUsageChart', [
+            Plotly.newPlot('monthlyBillStatusChart', [
                 {
-                    x: dailyUsageDates,
-                    y: dailyUsers,
+                    x: billMonths,
+                    y: paidAmounts,
                     type: 'bar',
-                    name: 'Total Users',
-                    marker: { color: 'purple' }
-                }
-            ]);
-
-            // Chart 4: Additional Insightful Information
-            const insightfulData = await fetchChartData('/Consultee_Pages/Report?handler=InsightfulData');
-            const insightfulLabels = insightfulData.map(entry => entry.label);
-            const insightfulValues = insightfulData.map(entry => entry.value);
-
-            Plotly.newPlot('insightfulChart', [
+                    name: 'Paid Amount ($)',
+                    marker: { color: 'green' }
+                },
                 {
-                    labels: insightfulLabels,
-                    values: insightfulValues,
-                    type: 'pie'
+                    x: billMonths,
+                    y: unpaidAmounts,
+                    type: 'bar',
+                    name: 'Unpaid Amount ($)',
+                    marker: { color: 'red' }
                 }
             ]);
         }
 
-        document.addEventListener('DOMContentLoaded', renderCharts);
+        document.getElementById('userSelect').addEventListener('change', renderCharts);
+        document.getElementById('yearSelect').addEventListener('change', renderCharts);
+        document.getElementById('userSelect2').addEventListener('change', renderCharts);
+        document.getElementById('yearSelect2').addEventListener('change', renderCharts);
+
+        async function initializeDropdowns() {
+            const users = await fetchChartData('/Consultee_Pages/Report?handler=Users');
+            const years = await fetchChartData('/Consultee_Pages/Report?handler=Years');
+
+            const userSelect = document.getElementById('userSelect');
+            users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.id;
+                option.textContent = user.name;
+                userSelect.appendChild(option);
+            });
+
+            const yearSelect = document.getElementById('yearSelect');
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            });
+
+            const userSelect2 = document.getElementById('userSelect2');
+            users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.id;
+                option.textContent = user.name;
+                userSelect2.appendChild(option);
+            });
+
+            const yearSelect2 = document.getElementById('yearSelect2');
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect2.appendChild(option);
+            });
+
+            renderCharts();
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeDropdowns);
     </script>
 }

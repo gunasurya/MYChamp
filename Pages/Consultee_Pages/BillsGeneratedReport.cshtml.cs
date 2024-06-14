@@ -128,7 +128,7 @@ namespace MYChamp.Pages.Consultee_Pages
                 return Page();
             }
 
-          
+
             var subject = "Your Bills Report";
             var body = $"Hello {consulteeName},\n\nHere is your bills report:\n\n";
             foreach (var bill in consulteeBills)
@@ -138,8 +138,8 @@ namespace MYChamp.Pages.Consultee_Pages
 
             try
             {
-                _sendEmail.Send(consulteeName, subject, body); 
-              
+                _sendEmail.Send(consulteeName, subject, body);
+
 
                 foreach (var bill in consulteeBills)
                 {
@@ -179,4 +179,3 @@ namespace MYChamp.Pages.Consultee_Pages
         }
     }
 }
- 

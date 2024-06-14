@@ -60,7 +60,7 @@ namespace MYChamp.Pages.Consultee_Pages
                 _db.consulteelog.Add(ConsulteeLog);
                 _db.SaveChanges();
 
-                return RedirectToPage("/Index");
+                return new JsonResult(new { success = true });
             }
             else
             {
@@ -76,7 +76,7 @@ namespace MYChamp.Pages.Consultee_Pages
             }
 
             Consultees = _db.consultees;
-            return Page();
+            return new JsonResult(new { success = false });
         }
     }
 }

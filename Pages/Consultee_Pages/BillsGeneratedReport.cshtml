@@ -19,17 +19,18 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-           
         </div>
         <div class="col-md-6">
             <form method="get" class="row g-3 float-md-end m-3">
                 <div class="col-md-5">
                     <label for="fromDate" class="form-label">From Date</label>
-                    <input type="datetime-local" asp-for="FromDate" class="form-control" id="fromDate" />
+                    <!-- Change input type to date -->
+                    <input type="date" asp-for="FromDate" class="form-control" id="fromDate" />
                 </div>
                 <div class="col-md-5">
                     <label for="toDate" class="form-label">To Date</label>
-                    <input type="datetime-local" asp-for="ToDate" class="form-control" id="toDate" />
+                    <!-- Change input type to date -->
+                    <input type="date" asp-for="ToDate" class="form-control" id="toDate" />
                 </div>
                 <div class="col-md-2 align-self-end">
                     <button type="submit" class="btn btn-primary">Filter</button>
@@ -39,15 +40,12 @@
     </div>
 </div>
 
-
-
-
 @if (Model.BillsGeneratedReport != null && Model.BillsGeneratedReport.Count > 0)
 {
     <table class="table table-bordered m-3 table-striped">
         <thead class="text-center">
             <tr>
-                <th>Consultee Name</th>           
+                <th>Consultee Name</th>
                 <th>Duration (hours)</th>
                 <th>Cost ($)</th>
                 <th>Generate Report</th>
@@ -60,48 +58,46 @@
                 var labelId = $"{modalId}_Label";
                 <tr class="text-center">
                     <td class="text-center">@item.ConsulteeName</td>
-                   
+
                     <td>@item.Duration</td>
                     <td>@item.Cost</td>
                     <td>
                         @if (item.GenerateReport == "Payment Pending")
                         {
-                            <button type="button" class="btn btn-primary">@item.GenerateReport
+                            <button type="button" class="btn btn-primary">
+                                @item.GenerateReport
                             </button>
                         }
                         else
                         {
-                            
-                        
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#@modalId">
-                            @item.GenerateReport
-                        </button>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#@modalId">
+                                @item.GenerateReport
+                            </button>
 
-                        <div class="modal fade" id="@modalId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="@labelId" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5 text-warning" id="@labelId">Warning</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p class="text-center fw-bold lead">Do you want to send the email about the billing?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <form method="post" asp-page-handler="SendEmail" class="d-inline">
-                                            <input type="hidden" name="ConsulteeName" value="@item.ConsulteeName" />
-                                            <input type="hidden" name="FromDate" value="@Model.FromDate" />
-                                            <input type="hidden" name="ToDate" value="@Model.ToDate" />
-                                            <button type="submit" class="btn btn-primary">Yes</button>
-                                        </form>
+                            <div class="modal fade" id="@modalId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="@labelId" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5 text-warning" id="@labelId">Warning</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="text-center fw-bold lead">Do you want to send the email about the billing?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <form method="post" asp-page-handler="SendEmail" class="d-inline">
+                                                <input type="hidden" name="ConsulteeName" value="@item.ConsulteeName" />
+                                                <input type="hidden" name="FromDate" value="@Model.FromDate" />
+                                                <input type="hidden" name="ToDate" value="@Model.ToDate" />
+                                                <button type="submit" class="btn btn-primary">Yes</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         }
                     </td>
-
                 </tr>
             }
         </tbody>

@@ -61,7 +61,7 @@ namespace MYChamp.Pages.Consultee_Pages
                     _db.consultees.Add(consultee_info);
                     _db.SaveChanges();
                     TempData["success"] = "yes";  // Set TempData["success"]
-                    return RedirectToPage("/");
+                    return RedirectToPage("Consultee_Register");
                 }
                 catch (Exception ex)
                 {

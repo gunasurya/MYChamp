@@ -5,11 +5,16 @@
 }
 <br />
 <br />
-@if (TempData["success"] == "yes")
+@if (TempData["success"]?.ToString() == "yes")
 {
     <div class="alert alert-success text-center" role="alert">
         Consultee registered successfully
     </div>
+    <script>
+        setTimeout(function () {
+            window.location.href = "/";
+        }, 1000); 
+    </script>
 }
 
 <div class="container mt-5 bordered">

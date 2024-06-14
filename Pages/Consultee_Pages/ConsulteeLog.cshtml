@@ -4,6 +4,15 @@
     ViewData["Title"] = "Create Consultee Log";
 }
 
+<div id="toaster" class="toast align-items-center text-bg-success border-0 position-fixed top-0 start-50 translate-middle-x p-3" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 9999;">
+    <div class="d-flex">
+        <div class="toast-body">
+            Log data added successfully!
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+
 <div class="container mt-5 mb-2">
     <div class="row justify-content-center align-items-end">
         <div class="col-md-9 text-end">
@@ -15,7 +24,7 @@
 <div class="container bordered">
     <div class="row justify-content-center align-items-center">
         <div class="col-md-9">
-            <form method="post" class="border p-4 border-gray border-2 rounded-1">
+            <form method="post" class="border p-4 border-gray border-2 rounded-1" id="consulteeLogForm">
                 <div class="mb-3 form-floating">
                     <select asp-for="ConsulteeLog.ConsulteeId" class="form-select @(ViewData.ModelState["ConsulteeLog.ConsulteeId"]?.Errors.Count > 0 ? "is-invalid" : "")" id="consulteeId" onchange="updateCost()">
                         <option value="">Select a Consultee</option>
@@ -106,9 +115,40 @@
             var duration = parseInt(document.getElementById('duration').value);
             var consulteeId = document.getElementById('consulteeId');
             var selectedOption = consulteeId.options[consulteeId.selectedIndex];
-            var costPerHour = selectedOption.getAttribute('data-cost-per-hour');
+            var costPerHour = parseFloat(selectedOption.getAttribute('data-cost-per-hour'));
             var cost = (duration / 60) * costPerHour;
             document.getElementById('cost').value = cost.toFixed(2);
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('consulteeId').addEventListener('change', updateCost);
+            document.getElementById('duration').addEventListener('input', updateCost);
+
+            document.getElementById('consulteeLogForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                var form = event.target;
+                var formData = new FormData(form);
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    }
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            var toastElement = new bootstrap.Toast(document.getElementById('toaster'));
+                            toastElement.show();
+                            setTimeout(function () {
+                                window.location.href = '@Url.Page("/Index")';
+                            }, 3000);
+                        } else {
+                            // Handle errors here if needed
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
     </script>
 }
