@@ -1,0 +1,121 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Create Invoice";
+}
+
+<div class="container" style="max-width: 800px; margin:80px auto; padding: 15px; border: 1px solid #ccc; height: 600px; overflow-y: scroll;">
+    <h1 class="text-center">Create Invoice</h1>
+
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="customername" class="control-label"></label>
+            <input asp-for="customername" class="form-control" />
+            <span asp-validation-for="customername" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="location" class="control-label"></label>
+            <input asp-for="location" class="form-control" />
+            <span asp-validation-for="location" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="discount" class="control-label"></label>
+            <input asp-for="discount" class="form-control" />
+            <span asp-validation-for="discount" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="referraldiscount" class="control-label"></label>
+            <input asp-for="referraldiscount" class="form-control" />
+            <span asp-validation-for="referraldiscount" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="paymentdate" class="control-label"></label>
+            <input asp-for="paymentdate" type="datetime-local" class="form-control" />
+            <span asp-validation-for="paymentdate" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="paymentmode" class="control-label"></label>
+            <input asp-for="paymentmode" class="form-control" />
+            <span asp-validation-for="paymentmode" class="text-danger"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Selected Items</h3>
+                <div id="selectedItemsContainer" style="border: 1px solid #ccc; padding: 15px; min-height: 200px;">
+                    <div id="selectedItems"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Available Items</h3>
+                <div style="border: 1px solid #ccc; padding: 15px; max-height: 400px; overflow-y: scroll;">
+                    <ul id="availableItems">
+                        @if (Model.Items != null)
+                        {
+                            @foreach (var item in Model.Items)
+                            {
+                                <li data-id="@item.Id" data-name="@item.ItemName" data-price="@item.Price" class="available-item">
+                                    @item.ItemName
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" asp-for="dict" id="SelectedItems" name="SelectedItems" />
+        <div class="text-center" style="margin-top: 20px;">
+            <button type="submit" class="btn btn-primary" >Create Invoice</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const selectedItems = {};
+
+            $('#availableItems').on('dblclick', '.available-item', function () {
+                const itemId = $(this).data('id');
+                const itemName = $(this).data('name');
+                const itemPrice = parseFloat($(this).data('price')); // Ensure price is stored as a number
+                $(this).remove();
+
+                selectedItems[itemName] = itemPrice;
+
+                $('#selectedItems').append(`
+                        <div class="selected-item" data-id="${itemId}" data-name="${itemName}">
+                            ${itemName} <button type="button" class="remove-item btn btn-danger btn-sm">x</button>
+                        </div>
+                    `);
+
+                updateSelectedItems();
+            });
+
+            $('#selectedItems').on('click', '.remove-item', function () {
+                const item = $(this).closest('.selected-item');
+                const itemName = item.data('name');
+                const itemId = item.data('id');
+                const itemPrice = selectedItems[itemName];
+                item.remove();
+
+                delete selectedItems[itemName];
+
+                $('#availableItems').append(`
+                        <li data-id="${itemId}" data-name="${itemName}" data-price="${itemPrice}" class="available-item">
+                            ${itemName}
+                        </li>
+                    `);
+
+                updateSelectedItems();
+            });
+
+            function updateSelectedItems() {
+                $('#SelectedItems').val(JSON.stringify(selectedItems));
+            }
+        });
+    </script>
+
+}

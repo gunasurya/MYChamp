@@ -1,0 +1,132 @@
+﻿@page "{id:int}"
+@model MYChamp.Pages.InvoicePage.InvoiceDisplayModel
+@{
+    ViewData["Title"] = "Invoice Details";
+}
+
+<div class="container" style="max-width: 800px; margin: 80px auto; padding: 15px; border: 1px solid #ccc;">
+    <div class="text-center">
+      
+        <h1>INVOICE</h1>
+    </div>
+
+    <hr style="border: 1px solid blue;" />
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Customer Name:</label>
+                <span>@Model.Invoice.CustomerName</span>
+            </div>
+            <div class="form-group">
+                <label>Invoice Number:</label>
+                <span>@Model.Invoice.InvoiceNumber</span>
+            </div>
+            <div class="form-group">
+                <label>Location:</label>
+                <span>@Model.Invoice.Location</span>
+            </div>
+           
+            <p><strong>Date:</strong> @Model.Invoice.Date.ToLocalTime().ToString("dd MMMM yyyy")</p>
+        </div>
+    </div>
+
+    <hr style="border: 1px solid blue;" />
+
+    <h3>Item Names</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var items = Model.Invoice.Itemspurchased.Split(','); // Assuming items are stored as a comma-separated string
+                var prices = Model.Invoice.Itemscosts.Split(','); // Assuming prices are stored as a comma-separated string
+                for (int i = 0; i < items.Length; i++)
+                {
+                    <tr>
+                        <td>@(i + 1)</td>
+                        <td>@items[i]</td>
+                        <td>1</td> <!-- Assuming each item is purchased once; adjust if necessary -->
+                        <td>@decimal.Parse(prices[i]).ToString("C")</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <hr style="border: 1px solid blue;" />
+
+    <div class="row">
+        <div class="col-md-6">
+            <p><strong>Terms and Conditions:</strong></p>
+            <p>Please send payment within 2 days of receiving this invoice.</p>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label><strong>Subtotal</strong>:</label>
+                <span>@Model.Invoice.SubTotal.ToString("C")</span>
+            </div>
+            <div class="form-group">
+                <label><strong>Discount</strong>:</label>
+                <span>@Model.Invoice.Discount.ToString("C")</span>
+            </div>
+            <div class="form-group">
+                <label><strong>Total Amount</strong>:</label>
+                <span>@Model.Invoice.TotalPrice.ToString("C")</span>
+            </div>
+            <div class="form-group">
+                <label><strong>Referral Discount</strong>:</label>
+                <span>@Model.Invoice.ReferralDiscount?.ToString("C")</span>
+            </div>
+            <div class="form-group">
+                <label><strong>GST (18%)</strong>:</label>
+                <span>@Model.Invoice.GST.ToString("C")</span>
+            </div>
+            <div class="form-group">
+                <label><strong>Grand Total</strong>:</label>
+                <span>@Model.Invoice.GrandTotal.ToString("C")</span>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary" onclick="showPopup()">Submit Invoice</button>
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Invoice Submission</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>Successfully submitted the invoice</p>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr style="border: 1px solid blue;" />
+
+    <div class="text-center">
+        <p><strong>Phone:</strong> +91 9110579808</p>
+        <p><strong>Mail:</strong> sales.captain@troopercruit.com</p>
+        <p><strong>Address:</strong> Hyderabad</p>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function showPopup() {
+            $('#successModal').modal('show');
+        }
+    </script>
+}

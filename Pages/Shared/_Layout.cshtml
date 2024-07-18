@@ -24,6 +24,14 @@
             <div class="collapse navbar-collapse justify-content-md-end me-3" id="solutionLayoutNavItems">
                 <ul class="navbar-nav mr-auto">
                     @{
+                       
+                       
+                            // Sample data for demonstration
+                        ViewData["NavItems"] = new List<string> { "PaymentManagement○ItemRegistration•InvoicePage•", "View Invoices○Settled Invoices•Unsettled Invoices•" };
+                        ViewData["NavLinks"] = new List<string> { "ItemRegistration•InvoicePage•", "InvoicePage/SettledInvoices•UnsettledInvoices•" };
+
+
+
                         List<string> navItems = (List<string>)ViewData["NavItems"],
                         navLinks = (List<string>)ViewData["NavLinks"];
                         if (navItems != null)
@@ -65,9 +73,8 @@
             </div>
         </div>
     </nav>
-    <header class="masthead">
+    <header class="masthead" style="padding-top:10px">
         <div data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="0" tabindex="0">
-            <div style="height:3.5em;"></div>
             @RenderBody()
             <div class="modal fade" id="CommoniFrameModel" tabindex="-1" role="dialog" aria-labelledby="CommoniFrameModelLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-scrollable">

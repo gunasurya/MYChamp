@@ -1,0 +1,62 @@
+﻿@page
+@model MYChamp.Pages.ItemRegistation.IndexModel
+@{
+    ViewData["Title"] = "Register New Item";
+}
+
+<style>
+    .container-outer {
+        border: 2px solid #28a745; 
+        padding: 90px; 
+        margin-top: 80px; 
+        max-width: 600px; 
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .form-content {
+        padding: 5px;
+    }
+
+    .form-group {
+        margin-bottom: 5px; 
+    }
+</style>
+
+<div class="container-outer">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10 form-content">
+                <h2 class="text-center">Register New Item</h2>
+
+               
+                <form method="post">
+                    <div class="form-group">
+                        <label asp-for="items.ItemName"></label>
+                        <input asp-for="items.ItemName" class="form-control" />
+                        <span asp-validation-for="items.ItemName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="items.ItemDescription"></label>
+                        <input asp-for="items.ItemDescription" class="form-control" />
+                        <span asp-validation-for="items.ItemDescription" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="items.Price"></label>
+                        <input asp-for="items.Price" class="form-control" />
+                        <span asp-validation-for="items.Price" class="text-danger"></span>
+                    </div>
+
+                 
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary"> Create</button>
+                    </div>
+                    <div class="text-center mt-4">
+                        <a asp-page="ItemsDisplay" class="btn btn-info">List of Items</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

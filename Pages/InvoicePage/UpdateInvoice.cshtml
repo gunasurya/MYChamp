@@ -1,0 +1,19 @@
+﻿@page "{id:int}"
+@model MYChamp.Pages.InvoicePage.UpdateInvoiceModel
+@{
+    ViewData["Title"] = "Update Invoice";
+}
+
+<h2>Update Invoice</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="PaymentMode">Payment Mode</label>
+        <input type="text" class="form-control" id="PaymentMode" asp-for="Invoice.PaymentMode" />
+    </div>
+    <div class="form-group">
+        <label for="PaymentDate">Payment Date</label>
+        <input type="date" class="form-control" id="PaymentDate" asp-for="Invoice.PaymentDate" />
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

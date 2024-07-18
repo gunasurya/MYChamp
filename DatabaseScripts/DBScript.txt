@@ -57,3 +57,29 @@ INSERT INTO public."VisitUsInformation" (
 "Icon", "Name", "Link", "Active", "ImageType") VALUES (
 'iVBORw0KGgoAAAANSUhEUgAAAEEAAABBCAMAAAC5KTl3AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACuUExURQAAAEC//xyOxhyO4xyq4zOn3zeo2zeo3zam4Dao3Tem3zeo3TWl3zil3jWl3jWo4Tio4Dqo4Dup4Dyp4D2q4D6q4ECr4UKr4Eat4VW05GO65WS75nXC6IbK64jL7JfR7p/U76DV76PW8KjZ8arZ8bDc8rjg873h9MXl9tvu+N7w+ef0++f1++73/PP5/PP5/fT6/fb6/Pb6/fn8/fn8/vr8/v3+/v7+/v7+/////7ZlwA4AAAAQdFJOUwAICQkJNzg4OeDg4OHh4uLJS34QAAAACXBIWXMAACHVAAAh1QEEnLSdAAABn0lEQVRYR+3XaVPCMBDG8Xog3hYVvO/7vtF+/y9mQv6hSXbL0OIrh98MY7PZfSZk8EUzbzGvp82ct0G9jnVmB6jVxXSWzVGob4YElk1MHOAimlxiaW3SI9hD1P0dpFqTHsEcgr/NTROcaYIzVsJ2YfRZpMZJsPPWh3k+LVytJBNEC/PGt/l0qQ6JhPciiXDD3iXVkkiwbZs8W73BoLf/UFyz4akJxTMLY7AOvFAfEgk/rnGPZZpwT7kkErq0FoduzcpzxZBICEcu4qXlekIyQXzzCD0BkfCU79KsOaErIBJordCjKyASzunV0RQaeZMSPSGZcEWzip6QTMg/6VbQEVES8gP6JRoiWoLBRGKH3YiWQL/EfkxL2GIgxXZC/RZnjMTE/7Wj30OHoQh7qYqbzPPbPoMedaEy4Y1Bj7JUkXDD3BB1hZLQeWSqdMeWRiQwE2FLp5zhlTl8Ua6i38MR08UxhREqbrKGaYLzTxLaPDTV+oN3nGyVx2aW7Ksaz83YgD9438xmWdY3T0LjUzA9sEytjhVmvQXq4zK/AyvLfgFfTGJskfFZAQAAAABJRU5ErkJggg=='::text, 'Twitter'::character varying, 'https://twitter.com/TrooperCruit'::character varying, '1'::smallint, 'png'::character varying)
  returning "Id";
+
+
+
+
+ Invoices tabel
+
+ CREATE TABLE IF NOT EXISTS Invoices (
+    Id SERIAL PRIMARY KEY,
+    CustomerName VARCHAR(255),
+    Location VARCHAR(255),
+    CompanyGSTNumber VARCHAR(255),
+    InvoiceNumber VARCHAR(255),
+    Date TIMESTAMP,
+    SubTotal DECIMAL,
+    Discount DECIMAL,
+    ReferralDiscount DECIMAL,
+    TotalPrice DECIMAL,
+    GST DECIMAL,
+    GrandTotal DECIMAL,
+    IsSettled BOOLEAN,
+    PaymentDate TIMESTAMP,
+    PaymentMode VARCHAR(50)
+);
+ALTER TABLE public.invoices
+ADD COLUMN itemspurchased text COLLATE pg_catalog."default",
+ADD COLUMN itemscosts text COLLATE pg_catalog."default";

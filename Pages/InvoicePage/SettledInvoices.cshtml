@@ -1,0 +1,29 @@
+﻿@page
+@model MYChamp.Pages.InvoicePage.SettledInvoicesModel
+@{
+    ViewData["Title"] = "Settled Invoices";
+}
+
+<h2>Settled Invoices</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Invoice Number</th>
+            <th>Customer Name</th>
+            <th>Date</th>
+            <th>Total Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var invoices in Model.SettledInvoices)
+        {
+            <tr>
+                <td>@invoices.InvoiceNumber</td>
+                <td>@invoices.CustomerName</td>
+                <td>@invoices.Date.ToLocalTime().ToString("dd MMMM yyyy")</td>
+                <td>@invoices.GrandTotal.ToString("C")</td>
+            </tr>
+        }
+        
+    </tbody>
+</table>
