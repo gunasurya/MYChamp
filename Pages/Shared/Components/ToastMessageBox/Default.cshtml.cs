@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace www.TrooperCruit.com.ViewComponents
+namespace MYChamp.Pages.Shared.Components.ToastMessageBox
 {
     public class ToastMessageBoxViewComponent : ViewComponent
     {

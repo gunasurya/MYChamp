@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - TrooperCruit</title>
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
-    <script src="~/lib/jquery/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
@@ -61,6 +59,14 @@
                             }
                         }
                     }
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a id="logout" class="nav-link text-danger fw-bold " asp-page="Auth/Logout" role="button"><h4>Logout</h4></a>
+
+                        </li>
+
+                    }
                 </ul>
             </div>
         </div>
@@ -100,6 +106,8 @@
             <li class="ms-3"><a class="nav-link text-white" href="https://www.linkedin.com/company/TrooperCruit" target="_blank"><i class="fa-brands fa-linkedin"></i></a></li>
         </ul>
     </footer>
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/lib/font-awesome/js/fontawesome.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

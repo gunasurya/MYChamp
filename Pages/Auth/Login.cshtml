@@ -1,0 +1,108 @@
+﻿@page
+@model MYChamp.Pages.Auth.LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+<link rel="stylesheet" href="~/css/Auth_css/Login.css">
+
+<div class="container mt-5">
+    <h1 class="text-center">@ViewData["Title"]</h1> <!-- Add login title -->
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-6">
+            <div class="text-danger" asp-validation-summary="All"></div>
+            <form method="post" class="border p-4 border-gray border-2 rounded-1">
+                <div class="mb-3">
+                    <label asp-for="login.Name" class="form-label"><h6>Username</h6></label>
+                    <input type="text" asp-for="login.Name" class="form-control" />
+                    <span asp-validation-for="login.Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="login.Password" class="form-label"><h6>Password</h6></label>
+                    <input type="password" asp-for="login.Password" class="form-control" />
+                    <span asp-validation-for="login.Password" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <input type="checkbox" asp-for="login.RememberMe" class="form-check-input mt-2 mx-0" />
+                    <label asp-for="login.RememberMe" class="form-check-label">Remember me</label>
+                </div>
+
+                <div class="mb-3 text-center py-4 row">
+                    <div class="col-6 text-center">
+                        <button type="submit" class="btn btn-primary" id="login_submit">Submit</button>
+                    </div>
+                    <div class="col-6 text-center">
+                        <span class="text-info">Do not have an account?</span><a asp-page="/Auth/Register" class="btn" id="register_btn">Register Here</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@if (Convert.ToBoolean(@HttpContext.Session.GetString("popUpShow")))
+{
+    <button type="button" class="btn btn-primary" id="popupbutton" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        Launch static backdrop modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade modal-dialog-centered" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 text-warning" id="staticBackdropLabel">Warning</h1>
+                    <button type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center fw-bold lead">Another Session is running. Do you want to cancel the running session?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a asp-page="/Auth/Forceful_logout" id="modalYes" class="btn btn-primary" role="button">Yes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+           
+            // Handle login form submission
+            $('form').on('submit', function (event) {
+                event.preventDefault(); // Prevent default form submission
+
+                var loginData = {
+                    Name: $('input[name="login.Name"]').val(),
+                    Password: $('input[name="login.Password"]').val(),
+                    RememberMe: $('input[name="login.RememberMe"]').is(':checked')
+                };
+
+                fetch('/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(loginData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.code === 2) {
+                            window.location.href = '/Index';
+                        } else if (data.code === 1) {
+                            window.location.reload();
+                            $("#popupbutton").click();
+
+                        } else {
+                            $('.text-danger').text(data.Message);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+            $("#popupbutton").hide();
+            $("#popupbutton").click();
+        });
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -4,20 +4,69 @@
 @{
     ViewData["Title"] = "Home page";
 }
-<div class="text-center mt-5">
-    <h1 class="display-4">Welcome</h1>
-    <h5>to</h5>
-    @await Component.InvokeAsync("TitleText")
-    <div class="container col-5 m-auto mt-4">
-        <div class="row">
-            @foreach (VisitUsInformationModel visitUsModel in Model.VisitUs)
-            {
-                <div class="col-2 text-end">
-                    <a href=" @visitUsModel.Link" title="@visitUsModel.Name">
-                        <img class="w-25" src="data:image/@visitUsModel.ImageType;base64,@visitUsModel.Icon" alt="@visitUsModel.Link" />
-                    </a>
-                </div>
-            }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <!-- Bootstrap CSS -->
+
+    <style>
+        .card:hover {
+            transform: scale(1.05);
+            transition: all 0.3s ease;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-8 text-center">
+                <h1 class="display-4">Welcome</h1>
+                <h5>to</h5>
+                @await Component.InvokeAsync("TitleText")
+            </div>
         </div>
     </div>
-</div>
+
+    <!-- Carousel Code -->
+
+    <div class="container my-4">
+        <div class="row >
+            <div class="col>
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static card">
+                        <strong class="d-inline-block mb-2 text-primary">World Music Collection</strong>
+                        <h3 class="mb-0">Globle Music Paradise</h3>
+                        <div class="mb-1 text-muted">hello</div>
+                        <p class="card-text mb-auto">
+                            This is a wider card with supporting text below as a natural lead-in to
+                            additional content.
+                        </p>
+                        <a href="#" class="stretched-link">Continue reading</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static card">
+                        <strong class="d-inline-block mb-2 text-success">Design</strong>
+                        <h3 class="mb-0">Globle Software paradise</h3>
+                        <div class="mb-1 text-muted">hello</div>
+                        <p class="mb-auto">
+                            This is a wider card with supporting text below as a natural lead-in to additional
+                            content.
+                        </p>
+                        <a href="#" class="stretched-link">Continue reading</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
+
